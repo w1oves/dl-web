@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <title>深度学习管理系统</title>
+  <head>
+    
+{% comment %} <meta http-equiv="refresh" content="100"> {% endcomment %}
+    <style>
+      header {
+        background-color: salmon;
+        color: white;
+        text-align: center;
+        padding: 5px;
+      }
+      a {
+        text-decoration: none;
+      }
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; 
+        
+        position: -webkit-sticky; /* Safari */
+        position: sticky;
+        top: 0;
+      }
+      
+      li {
+        float: left;
+        margin-left: 1em;
+      }
+      
+      li a,td a{
+        display: block;
+        background-color: salmon;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        padding-left: 2em;
+        padding-right: 2em;
+        border: 1px white solid;        
+      }
+      
+      li a:hover,td a:hover {
+        background-color: #111;
+      }
+      
+      .active {
+        background-color: #4CAF50;
+      }
+      #nav_container {
+        text-align: center;
+        width: fit-content;
+        margin: auto;
+        line-height: 80px;
+      }
+      nav {
+        background-color: #eeeeee;
+        height: 80px;
+        width: 100%;
+        text-align: center;
+        align-content: center;
+      }
+
+      section {
+        text-align: center;
+        width:100%;
+        float: left;
+        padding: 5px;
+      }
+      footer {
+        background-color: salmon;
+        color: white;
+        clear: both;
+        text-align: center;
+        padding: 5px;
+      }
+      table {
+        overflow-x: auto;
+        border: 1px solid black;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        word-wrap: break-word;
+        font-size: small;
+      }
+      th.firstcol,
+      td.firstcol {
+        font-size: large;
+        width: 10em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <a href="/">
+      <header>
+        <h1>Deep Learning</h1>
+      </header>
+    </a>
+
+    <nav>
+      <div id="nav_container">
+        <ul>
+        {% block menu %}
+        <li><a href='{%url "signup"%}'>注册</a></li>
+        <li><a href='{%url "login"%}'>登录</a></li>
+        {% endblock %}
+        </ul>
+      </div>
+    </nav>
+
+    <section>
+      {% block content %}
+      <h1>点击对应用户登录</h1>
+      <div style="text-align: left">
+        <table>
+          <tr>
+            <th class="firstcol">Name</th>
+            <th>interpreter</th>
+            <th>config_dir</th>
+            <th>work_dir</th>
+            <th>train_script</th>
+            <th>test_script</th>
+          </tr>
+          {% if Users %}
+          <ul>
+            {% for User in Users %}
+            <tr>
+              <td class="firstcol">
+                <a href='{% url "login" User.name %}'>
+                    {{User.name}}
+                </a>
+                </button>
+              </td>
+              <td>{{User.interpreter}}</td>
+              <td>{{User.config_dir}}</td>
+              <td>{{User.work_dir}}</td>
+              <td>{{User.train_script}}</td>
+              <td>{{User.test_script}}</td>
+            </tr>
+            {% endfor %}
+          </ul>
+        </table>
+        {% endif %}
+      </div>
+      {% endblock %}
+    </section>
+
+    <footer>
+      Copyright WZX &nbsp; {% if User_name %} User: {{User_name}} {% endif %}
+    </footer>
+  </body>
+</html>

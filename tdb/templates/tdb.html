@@ -1,0 +1,53 @@
+<head>
+    <style>
+      table {
+        overflow-x: auto;
+        border: 1px solid black;
+      }
+      body {
+        text-align: center;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        word-wrap: break-word;
+        font-size: small;
+      }
+      th.firstcol,
+      td.firstcol {
+        font-size: large;
+        /* width: 10em; */
+      }
+    </style>
+</head>
+<body>
+    <form method="post" action="">
+        {% csrf_token %}
+        <button type="submit" name="close_all">
+          Close all
+        </button>
+    </form>
+  <table>
+    <tr>
+      <th class="firstcol">Name</th>
+      <th>port</th>
+    </tr>
+    {% if TDBs %}
+    <ul>
+      {% for TDB in TDBs %}
+      <tr>
+        <td class="firstcol">
+          <a href="//{{TDB.link}}" target='_blank'>
+            <div class="menu">
+              {{TDB.name|safe}}
+            </div>
+          </a>
+          </button>
+        </td>
+        <td>{{TDB.port}}</td>
+      </tr>
+      {% endfor %}
+    </ul>
+  </table>
+  {% endif %}
+</body>

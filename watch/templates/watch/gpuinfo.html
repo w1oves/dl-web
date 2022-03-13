@@ -1,0 +1,25 @@
+{% extends "watch/index.html" %}
+<head>
+  <style>
+    section {
+      text-align: center;
+      width: 100%;
+      float: left;
+      padding: 10px;
+    }
+  </style>
+</head>
+{% block content %}
+<div id="gpu_info">
+  <h2 style="text-align: center">显卡信息</h2>
+  <center>
+    <button
+      onclick="location=location"
+      style="width: 80px; height: 40px; background-color: rgb(240, 194, 194)"
+    >
+      Refresh</button
+    ><br />
+  </center>
+  <font color="black" size="4"> {{gpu_info|safe}} </font>
+</div>
+{% endblock %}

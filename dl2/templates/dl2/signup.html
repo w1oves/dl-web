@@ -1,0 +1,28 @@
+{% extends "dl2/index.html" %}
+<head>
+  <style>
+    section {
+      text-align: center;
+      width: 100%;
+      float: left;
+      padding: 10px;
+    }
+  </style>
+</head>
+{% block content %}
+<div id="Container">
+  <form action="{% url 'submit' %}" method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <input type="submit" value="Submit" />
+  </form>
+  {{message}}
+</div>
+<style>
+  div {
+    text-align: center;
+    border: 1px solid blue;
+    width: 500px; /*宽度设置固定值*/
+    margin: 10px auto;
+  }
+</style>
+{% endblock %}

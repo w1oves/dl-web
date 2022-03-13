@@ -1,0 +1,38 @@
+{% extends "dl2/index.html" %}
+
+<head>
+  <style>
+    section {
+      text-align: center;
+      width: 100%;
+      float: left;
+      padding: 10px;
+    }
+  </style>
+</head>
+{% block content %}
+<style>
+  iframe {
+    width: 100%;
+    height: 1000px;
+    /* margin: auto; */
+    /* margin-left: 300px; */
+  }
+</style>
+{% if option == 'workdir' %}
+<iframe src='{% url "workdir" %}' frameborder="0"> </iframe>
+{% elif option == 'gpu' %}
+<iframe src='{% url "gpuinfo" %}' frameborder="0"> </iframe>
+{% elif option == 'configdir' %}
+<iframe src='{% url "configdir" %}' frameborder="0"> </iframe>
+{% elif option == 'tdb' %}
+<iframe src='{% url "tdb" %}' frameborder="0"> </iframe>
+{% elif option == 'runner' %}
+<iframe src='{% url "runner" %}' frameborder="0"> </iframe>
+{%endif%} {% endblock %} {% block menu%}
+<li><a href='/watch/configdir'>配置文件</a></li>
+<li><a href='/watch/workdir'>记录文件</a></li>
+<li><a href='/watch/gpu'>GPU状态</a></li>
+<li><a href='/watch/tdb'>Tensorboards</a></li>
+<li><a href='/watch/runner'>进程</a></li>
+{% endblock %}

@@ -1,0 +1,190 @@
+<head>
+  <style>
+    table {
+      overflow-x: auto;
+      border: 1px solid black;
+    }
+    th,
+    td {
+      border: 1px solid black;
+      word-wrap: break-word;
+      font-size: small;
+      text-align: left;
+    }
+    th button{
+      height: 2em;
+      width: 8em;
+      font-size: small;
+      float: left;
+      margin: auto;
+      color:white;
+      background-color: salmon;
+    }
+    td select{
+      height: 2em;
+      width: 8em;
+      display: inline;
+      float: left;
+      font-size: medium;
+      color:white;
+      background-color: rgba(250, 128, 114, 0.664);
+      font-weight: bold;
+    }
+    th.firstcol,
+    td.firstcol {
+      font-size: large;
+    }
+    .ac-container{
+    /* width: 50em; */
+    text-align: left;
+    }
+    .ac-container label{
+      position: relative;
+      z-index: 20;
+      display: block;
+      /* height: 30px; */
+      cursor: pointer;
+      color: #777;   
+      font-size: small;
+      text-align: left;
+    }
+    .ac-container label:hover{
+      background: #eee;
+    }
+    .ac-container input:checked ~ label{
+      height: 20px;
+      font-size: 0px;
+      background: salmon;
+    }
+    .ac-container input{
+      display: none;
+    }
+    .ac-container .article{
+      background: rgba(255, 255, 255, 0.5);
+      margin-top: -1px;
+      overflow: hidden;
+      height: 0px;
+      position: relative;
+      z-index: 10;
+      -webkit-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+      -moz-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+      -o-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+      -ms-transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+      transition: height 0.3s ease-in-out, box-shadow 0.6s linear;
+    }
+    .ac-container input:checked ~ .article{
+      height: 23em;
+      -webkit-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+      -moz-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+      -o-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+      -ms-transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+      transition: height 0.5s ease-in-out, box-shadow 0.1s linear;
+      box-shadow: 0px 0px 0px 1px rgba(155,155,155,0.3);
+    }
+  </style>
+</head>
+<body>
+  <form method="post" action="">
+    {% csrf_token %}
+    <button type="submit" name="close_all">Close all</button>
+  <h2>训练进程</h2>
+  <table>
+    <tr>
+      <th>Operate<br><button type='submit'>确定</button></th>
+      <th class="firstcol">Config</th>
+      <th>Tensorboard</th>
+      <th>Gpus</th>
+      <th>Pid</th>
+      <th>Port</th>
+      <th>Alive?</th>
+      <th>text</th>
+    </tr>
+    {% if train_runners %}
+    <ul>
+        {% csrf_token %} {% for runner in train_runners %}
+        <tr>
+          <td>
+            <select name="runner_buttons">
+              <option selected value="">                
+                <text style="background-color: gray;">选择操作</text>
+              
+              </option>
+              {%for key,name in runner.buttons.items%}
+                <option value="{{key}}">{{name}}</option>
+              {%endfor%}            
+            </select>
+            
+          </td>
+          <td>{{runner.config}}</td>
+          <td><a href='//{{runner.link}}' target='_blank'>{{runner.link}}</a></td>
+          <td>{{runner.gpus|safe}}</td>
+          <td>{{runner.pid}}</td>
+          <td>{{runner.port}}</td>
+          <td>{{runner.alive}}</td>
+          <td>
+            <section class="ac-container">
+            <input id={{runner.port}} type="checkbox"/>
+            <label for={{runner.port}}>{{runner.simple_log}}</label>
+            <div class="article">
+              <textarea readonly='true' rows="20" cols="90">
+              {{runner.log}}</textarea></div>
+          </div>
+          </td>
+        </tr>
+      </form>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </table>
+  <h2>测试进程</h2>
+  <table>
+    <tr>
+      <th>Operate<br><button type='submit'>确定</button></th>
+      <th class="firstcol">Config</th>
+      <th>Gpus</th>
+      <th>Pid</th>
+      <th>Port</th>
+      <th>Weight</th>
+      <th>Aug_test</th>
+      <th>Alive?</th>
+      <th>text</th>
+    </tr>
+    {% if test_runners %}
+    <ul>
+        {% csrf_token %} {% for runner in test_runners %}
+        <tr>
+          <td>
+            <select name="runner_buttons">
+              <option selected value="">                
+                <text style="background-color: gray;">选择操作</text>
+              
+              </option>
+              {%for key,name in runner.buttons.items%}
+                <option value="{{key}}">{{name}}</option>
+              {%endfor%}            
+            </select>
+            
+          </td>
+          <td>{{runner.config}}</td>
+          <td>{{runner.gpus|safe}}</td>
+          <td>{{runner.pid}}</td>
+          <td>{{runner.port}}</td>
+          <td><b>{{runner.weight}}</b></td>
+          <td>{{runner.aug_test}}</td>
+          <td>{{runner.alive}}</td>
+          <td>
+            <section class="ac-container">
+            <input id={{runner.port}} type="checkbox"/>
+            <label for={{runner.port}}>{{runner.simple_log|safe}}</label>
+            <div class="article">
+              <textarea readonly='true' rows="20" cols="90">
+              {{runner.log}}</textarea></div>
+          </div>
+          </td>
+        </tr>
+      </form>
+      {% endfor %}
+    </ul>
+  </table>
+  {% endif %}
+</body>

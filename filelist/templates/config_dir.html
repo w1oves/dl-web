@@ -1,0 +1,9 @@
+{%extends "filelist.html" %} {% block gpu %}
+<select id="gpu_select" name="gpus" multiple="multiple">
+  {% for gpu in gpus %}
+  <option value="{{gpu.num|safe}}">{{gpu.text|safe}}</option>
+  {% endfor %}
+</select>
+{%endblock%} {%block buttons%}
+<input class="outstand" type="submit" value="训练" />
+{%endblock%}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<head>
+  <style>
+    body {
+      text-align: left;
+    }
+
+    input.outstand {
+      /* width: 6em; */
+      margin: 5px;
+      height: 2em;
+      text-align: center;
+      border-radius: 10px;
+      color: whitesmoke;
+      background-color: salmon;
+      -webkit-appearance: none;
+      font-size: large;
+    }
+    form {
+      float: left;
+      width: 60%;
+    }
+    #gpu,
+    #buttons,
+    #list {
+      width: 70%;
+      margin-left: auto;
+    }
+    #list button {
+      width: 80%;
+      font-size: large;
+      text-align: left;
+      word-wrap: break-word;
+      border-radius: 3%;
+      color: black;
+      /* background-color: aliceblue; */
+      padding: 0.3em;
+    }
+    #list input.checkbox {
+      width: 20px;
+      height: 2em;
+    }
+    #text {
+      float: left;
+      width: 30%;
+    }
+    button.default {
+      background-color: salmon;
+    }
+    button.dir {
+      background-color: aliceblue;
+    }
+    button.file {
+      background-color: white;
+    }
+  </style>
+</head>
+<body>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div id="gpu">{% block gpu %} {% endblock %}</div>
+    <div id="buttons">{% block buttons %}{% endblock%}</div>
+    <div id="list">
+      {% for label,path in choices.default.items %}
+      <input
+        class="checkbox"
+        type="checkbox"
+        name="select_paths"
+        value="{{path}}"
+      />
+      <button class="default" type="submit" name="enter_path" value="{{path}}">
+        {{label}}
+      </button>
+      <br />
+      {% endfor %} {% for label,path in choices.dir.items %}
+      <input
+        class="checkbox"
+        type="checkbox"
+        name="select_paths"
+        value="{{path}}"
+      />
+      <button class="dir" type="submit" name="enter_path" value="{{path}}">
+        {{label}}
+      </button>
+      <br />
+      {% endfor %} {% for label,path in choices.file.items %}
+      <input
+        class="checkbox"
+        type="checkbox"
+        name="select_paths"
+        value="{{path}}"
+      />
+      <button class="file" type="submit" name="enter_path" value="{{path}}">
+        {{label}}
+      </button>
+      <br />
+      {% endfor %}
+    </div>
+  </form>
+  <div id="text">
+    <textarea rows="50" cols="70" placeholder="...">
+    {{content}}
+  </textarea
+    >
+  </div>
+</body>
