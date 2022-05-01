@@ -28,8 +28,8 @@ class TDB(models.Model):
         Port.port_push(self.port)
         return super().delete(using=using, keep_parents=keep_parents)
 
-    def __str__(self) -> str:
-        return f"{self.User.name,self.TrainRunner,self.TestRunner}:{self.port}"
+    # def __str__(self) -> str:
+    #     return f"{self.User.name,self.TrainRunner,self.TestRunner}:{self.port}"
 
 
 def create_tdb(parent: models.Model, paths: List[str]) -> TDB:

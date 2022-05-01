@@ -47,7 +47,8 @@ class Runner(models.Model):
         for tdb in self.tdb_set.all():
             tdb.delete()
         try:
-            os.system(f"kill -9 {self.pid}")
+            if self.pid!=0:
+                os.system(f"kill -9 {self.pid}")
             os.remove(self.cache_file)
         except:
             pass
@@ -164,6 +165,55 @@ class TrainRunner(Runner):
         except:
             pass
 
+    # def auto_startup(self, resume=False):
+    #     # need parameters
+    #     user = self.User
+    #     config = self.config
+    #     gpus = self.gpus
+    #     # startup
+    #     train_script = user.train_script
+    #     port = Port.port_pop()
+    #     cache_file = osp.join(cache_root, f"{port}.log")
+    #     log_dir = osp.join(
+    #         user.work_dir,
+    #         osp.basename(osp.dirname(config)),
+    #         osp.splitext(osp.basename(config))[0],
+    #     )
+    #     command = [
+    #         user.interpreter,
+    #         "-m",
+    #         "torch.distributed.launch",
+    #         f'--nproc_per_node={len(gpus.split(","))}',
+    #         f"--master_port={port}",
+    #         train_script,
+    #         config,
+    #         "--launcher",
+    #         "pytorch",
+    #         f"--work-dir={log_dir}",
+    #     ]
+    #     if resume:
+    #         latest_weight = self.get_latest_weight()
+    #         command.append(f"--resume-from={latest_weight}")
+    #     command = " ".join(command)
+    #     command = f"'{command}'"
+    #     auto_start_path = osp.abspath(osp.join(osp.dirname(__file__), "auto_start.py"))
+    #     auto_start = sh.Command(auto_start_path)
+    #     p = auto_start(
+    #         self.gpus.replace(",", " "),
+    #         command,
+    #         _env={"CUDA_VISIBLE_DEVICES": gpus},
+    #         _bg=True,
+    #         _out=cache_file,
+    #         _err_to_out=True,
+    #     )
+
+    #     self.pid = p.pid
+    #     self.port = port
+    #     self.log_dir = log_dir
+    #     self.cache_file = cache_file
+    #     tdb_models.create_tdb(self, [log_dir])
+    #     self.save()
+
     def startup(self, resume=False):
         # need parameters
         user = self.User
@@ -174,7 +224,11 @@ class TrainRunner(Runner):
         train_script = user.train_script
         port = Port.port_pop()
         cache_file = osp.join(cache_root, f"{port}.log")
-        log_dir = osp.join(user.work_dir, osp.splitext(osp.basename(config))[0])
+        log_dir = osp.join(
+            user.work_dir,
+            osp.basename(osp.dirname(config)),
+            osp.splitext(osp.basename(config))[0],
+        )
         # stream = open(cache_file, "w")
         if resume:
             latest_weight = self.get_latest_weight()
@@ -187,7 +241,7 @@ class TrainRunner(Runner):
                 config,
                 "--launcher",
                 "pytorch",
-                f"--work-dir={user.work_dir}",
+                f"--work-dir={log_dir}",
                 f"--resume-from={latest_weight}",
                 _env={"CUDA_VISIBLE_DEVICES": gpus},
                 _bg=True,
@@ -204,7 +258,7 @@ class TrainRunner(Runner):
                 config,
                 "--launcher",
                 "pytorch",
-                f"--work-dir={user.work_dir}",
+                f"--work-dir={log_dir}",
                 _env={"CUDA_VISIBLE_DEVICES": gpus},
                 _bg=True,
                 _out=cache_file,
@@ -262,7 +316,11 @@ class TestRunner(Runner):
         python = sh.Command(user.interpreter)
         port = Port.port_pop()
         cache_file = osp.join(cache_root, f"{port}.log")
-        log_dir = osp.join(user.work_dir, osp.splitext(osp.basename(config))[0])
+        log_dir = osp.join(
+            user.work_dir,
+            osp.basename(osp.dirname(config)),
+            osp.splitext(osp.basename(config))[0],
+        )
         if aug_test:
             p = python(
                 test_script,

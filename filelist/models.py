@@ -21,6 +21,8 @@ class Machine(models.Model):
         """
 
     def get_choices(self):
+        if not osp.isdir(self.cur_dir):
+            self.enter_path(self.root_path)
         choices = dict(default=OrderedDict(), dir=OrderedDict(), file=OrderedDict())
         choices["default"]["root"] = self.root_path
         choices["default"][".."] = osp.abspath(osp.join(self.cur_dir, ".."))
